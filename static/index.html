@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI Story Engine — Professional local AI interactive fiction">
+    <title>AI Story Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- ─── Top Bar ─────────────────────────────────────────────── -->
+    <header id="top-bar">
+        <div class="top-bar-left">
+            <button id="btn-sidebar-toggle" class="icon-btn" title="Toggle Sidebar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+            <h1 id="adventure-title" class="top-bar-title">AI Story Engine</h1>
+        </div>
+        <div class="top-bar-center">
+            <div id="connection-status" class="status-dot disconnected" title="LLM Status">
+                <span class="status-text">Disconnected</span>
+            </div>
+        </div>
+        <div class="top-bar-right">
+            <button id="btn-context-debug" class="icon-btn" title="View Context">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </button>
+            <button id="btn-settings" class="icon-btn" title="Settings">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <div id="app-container">
+        <!-- ─── Sidebar ─────────────────────────────────────────── -->
+        <aside id="sidebar" class="sidebar open">
+            <!-- Adventures Panel -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-header" data-section="adventures">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    <span>Adventures</span>
+                    <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="sidebar-section-body" id="section-adventures">
+                    <button id="btn-new-adventure" class="sidebar-btn primary">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        New Adventure
+                    </button>
+                    <div id="adventure-list" class="adventure-list"></div>
+                </div>
+            </div>
+
+            <!-- Plot Essentials Panel -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-header" data-section="plot">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <span>Plot Essentials</span>
+                    <span class="token-badge" id="plot-tokens">0</span>
+                    <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="sidebar-section-body collapsed" id="section-plot">
+                    <textarea id="plot-essentials-input" class="sidebar-textarea" placeholder="Core character identity, world rules, main quest objectives...&#10;&#10;Example: You are Marcus, a disgraced knight seeking redemption in the Ashen Wastes."></textarea>
+                    <button id="btn-save-plot" class="sidebar-btn">Save</button>
+                </div>
+            </div>
+
+            <!-- Author's Note Panel -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-header" data-section="author">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    <span>Author's Note</span>
+                    <span class="token-badge" id="author-tokens">0</span>
+                    <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="sidebar-section-body collapsed" id="section-author">
+                    <textarea id="author-note-input" class="sidebar-textarea short" placeholder="Writing style, tone, pacing...&#10;&#10;Example: [Style: noir detective fiction. Short, punchy sentences. Heavy atmosphere.]"></textarea>
+                    <button id="btn-save-author" class="sidebar-btn">Save</button>
+                </div>
+            </div>
+
+            <!-- AI Instructions Panel -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-header" data-section="instruct">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+                    <span>AI Instructions</span>
+                    <span class="token-badge" id="instruct-tokens">0</span>
+                    <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="sidebar-section-body collapsed" id="section-instruct">
+                    <textarea id="instructions-input" class="sidebar-textarea" placeholder="System-level instructions for the AI narrator..."></textarea>
+                    <button id="btn-save-instruct" class="sidebar-btn">Save</button>
+                </div>
+            </div>
+
+            <!-- Story Cards Panel -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-header" data-section="cards">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    <span>Story Cards</span>
+                    <span class="token-badge" id="cards-count">0</span>
+                    <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="sidebar-section-body collapsed" id="section-cards">
+                    <button id="btn-new-card" class="sidebar-btn primary">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        New Card
+                    </button>
+                    <div class="auto-cards-toggle">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="auto-cards-enabled" checked>
+                            <span class="toggle-switch"></span>
+                            <span>Auto-Cards</span>
+                        </label>
+                        <span class="auto-cards-info" id="auto-cards-info" title="Detected entities"></span>
+                    </div>
+                    <div id="story-cards-list" class="cards-list"></div>
+                </div>
+            </div>
+
+            <!-- NPC Brains Panel -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-header" data-section="brains">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a9 9 0 0 0-9 9c0 3.9 2.5 7.1 6 8.3V21h6v-1.7c3.5-1.2 6-4.4 6-8.3a9 9 0 0 0-9-9z"/><path d="M9 21h6"/><path d="M10 22h4"/></svg>
+                    <span>NPC Brains</span>
+                    <span class="token-badge" id="brains-count">0</span>
+                    <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="sidebar-section-body collapsed" id="section-brains">
+                    <div class="auto-cards-toggle">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="inner-self-enabled" checked>
+                            <span class="toggle-switch"></span>
+                            <span>Inner-Self</span>
+                        </label>
+                    </div>
+                    <div class="npc-add-row">
+                        <input type="text" id="npc-name-input" class="npc-name-input" placeholder="NPC name...">
+                        <button id="btn-add-npc" class="npc-add-btn" title="Register NPC">+</button>
+                    </div>
+                    <div id="npc-brains-list" class="npc-brains-list"></div>
+                </div>
+            </div>
+
+            <!-- Memory & Summary Panel -->
+            <div class="sidebar-section">
+                <div class="sidebar-section-header" data-section="memory">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    <span>Memory</span>
+                    <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="sidebar-section-body collapsed" id="section-memory">
+                    <div class="memory-info">
+                        <div class="memory-stat">
+                            <span class="memory-label">Auto-Summary</span>
+                            <span class="memory-value" id="summary-tokens">0 tokens</span>
+                        </div>
+                        <div class="memory-stat">
+                            <span class="memory-label">Memories Stored</span>
+                            <span class="memory-value" id="memory-count">0</span>
+                        </div>
+                        <div class="memory-stat">
+                            <span class="memory-label">Story Turns</span>
+                            <span class="memory-value" id="turn-count">0</span>
+                        </div>
+                    </div>
+                    <div class="summary-preview">
+                        <label>Current Summary:</label>
+                        <div id="summary-text" class="summary-text-display">No summary yet.</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ─── Main Story Area ─────────────────────────────────── -->
+        <main id="story-area">
+            <!-- Welcome screen (shown when no adventure) -->
+            <div id="welcome-screen" class="welcome-screen">
+                <div class="welcome-content">
+                    <div class="welcome-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="url(#welcome-gradient)" stroke-width="1.5">
+                            <defs>
+                                <linearGradient id="welcome-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#a78bfa"/>
+                                    <stop offset="100%" style="stop-color:#f59e0b"/>
+                                </linearGradient>
+                            </defs>
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                        </svg>
+                    </div>
+                    <h2>AI Story Engine</h2>
+                    <p>Create a new adventure or load an existing one to begin.</p>
+                    <button id="btn-welcome-new" class="welcome-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        New Adventure
+                    </button>
+                </div>
+            </div>
+
+            <!-- Story display -->
+            <div id="story-display" class="story-display hidden">
+                <div id="story-entries" class="story-entries"></div>
+                <div id="streaming-indicator" class="streaming-indicator hidden">
+                    <div class="loading-content">
+                        <div class="typing-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <span class="loading-text">Generating...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input area -->
+            <div id="input-area" class="input-area hidden">
+                <div class="input-row">
+                    <div class="action-type-select">
+                        <select id="action-type" title="Action Type">
+                            <option value="do">Do</option>
+                            <option value="say">Say</option>
+                            <option value="story">Story</option>
+                        </select>
+                    </div>
+                    <div class="input-wrapper">
+                        <textarea id="player-input" class="player-input" placeholder="What do you do?" rows="1"></textarea>
+                    </div>
+                    <button id="btn-submit" class="submit-btn" title="Submit (Enter)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    </button>
+                </div>
+                <div class="input-actions">
+                    <button id="btn-undo" class="action-btn" title="Undo (Ctrl+Z)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                        Undo
+                    </button>
+                    <button id="btn-retry" class="action-btn" title="Retry">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                        Retry
+                    </button>
+                    <button id="btn-continue" class="action-btn continue-btn" title="Continue the narration">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        Continue
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ─── Modals ──────────────────────────────────────────────── -->
+    <!-- New Adventure Modal -->
+    <div id="modal-new-adventure" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <h3>New Adventure</h3>
+            <input type="text" id="new-adventure-name" class="modal-input" placeholder="Adventure name..." autofocus>
+            <div class="modal-actions">
+                <button class="modal-btn secondary" id="btn-cancel-new">Cancel</button>
+                <button class="modal-btn primary" id="btn-confirm-new">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Story Card Editor Modal -->
+    <div id="modal-card-editor" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content wide">
+            <h3 id="card-editor-title">New Story Card</h3>
+            <div class="card-editor-form">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="card-name" class="modal-input" placeholder="e.g., The Obsidian Crown">
+                </div>
+                <div class="form-group">
+                    <label>Keywords <span class="hint">(comma-separated)</span></label>
+                    <input type="text" id="card-keywords" class="modal-input" placeholder="e.g., obsidian crown, crown, artifact">
+                </div>
+                <div class="form-group">
+                    <label>Entry <span class="hint">(text injected when triggered)</span></label>
+                    <textarea id="card-entry" class="modal-textarea" placeholder="Description, lore, rules..." rows="4"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Priority <span class="hint">(1-10)</span></label>
+                        <input type="number" id="card-priority" class="modal-input" min="1" max="10" value="5">
+                    </div>
+                    <div class="form-group half">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="card-regex">
+                            Use Regex
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn danger" id="btn-delete-card" style="display:none">Delete</button>
+                <div class="modal-actions-right">
+                    <button class="modal-btn secondary" id="btn-cancel-card">Cancel</button>
+                    <button class="modal-btn primary" id="btn-save-card">Save Card</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="modal-settings" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content wide">
+            <h3>Settings</h3>
+            <div class="settings-form">
+                <div class="settings-group">
+                    <h4>LLM Connection</h4>
+                    <div class="form-group">
+                        <label>API Endpoint</label>
+                        <input type="text" id="setting-endpoint" class="modal-input" placeholder="http://localhost:5001/v1">
+                    </div>
+                    <div class="form-group">
+                        <label>Context Size (tokens)</label>
+                        <input type="number" id="setting-context-size" class="modal-input" value="16384">
+                    </div>
+                </div>
+                <div class="settings-group">
+                    <h4>Sampling</h4>
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label>Temperature</label>
+                            <input type="number" id="setting-temperature" class="modal-input" step="0.05" min="0" max="2" value="0.85">
+                        </div>
+                        <div class="form-group half">
+                            <label>Min-P</label>
+                            <input type="number" id="setting-min-p" class="modal-input" step="0.01" min="0" max="1" value="0.05">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label>Repetition Penalty</label>
+                            <input type="number" id="setting-rep-penalty" class="modal-input" step="0.05" min="1" max="2" value="1.1">
+                        </div>
+                        <div class="form-group half">
+                            <label>Max Response Tokens</label>
+                            <input type="number" id="setting-max-tokens" class="modal-input" step="50" min="100" max="4096" value="350">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn secondary" id="btn-cancel-settings">Cancel</button>
+                <button class="modal-btn primary" id="btn-save-settings">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Debug Modal -->
+    <div id="modal-context" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content wide tall">
+            <h3>Context Debug — View What The AI Sees</h3>
+            <div id="context-debug-content" class="context-debug-content">
+                <p class="muted">Loading...</p>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn secondary" id="btn-close-context">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
