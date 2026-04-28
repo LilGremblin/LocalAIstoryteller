@@ -1,47 +1,53 @@
-# 🖋️ AI Story Engine
+# AI Story Engine (Work in Progress)
 
-A professional-grade, local-first interactive fiction engine. Experience immersive storytelling powered by state-of-the-art Large Language Models (LLMs), with deep state management and dynamic world-building tools.
+A local-first interactive fiction engine designed for immersive storytelling powered by Large Language Models (LLMs). This project focuses on deep state management, character consistency, and dynamic world-building.
 
-![AI Story Engine UI](https://github.com/LilGremblin/LocalAIstoryteller/raw/main/static/preview.png) *(Placeholder for preview image)*
+**Status: Active Development / Work in Progress**
 
-## ✨ Key Features
+## Features
 
-- **🧠 NPC Brains (Inner-Self)**: Characters have their own thoughts, motivations, and internal monologues that influence their actions and dialogue.
-- **🗂️ Story Cards (Lorebook)**: Sophisticated world-building with "World Info" cards that trigger based on keywords, ensuring the AI maintains consistency with your setting.
-- **📝 Smart Summarization**: Automatically condenses long-running adventures to maintain context without hitting token limits.
-- **🎭 Multi-Mode Narrator**: Switch between "Do" (actions), "Say" (dialogue), and "Story" (narrative control) to steer the adventure.
-- **🛠️ Context Debugger**: Peek under the hood to see exactly what information is being sent to the AI at any moment.
-- **🎨 Premium Interface**: A sleek, glassmorphic dark theme designed for long writing sessions and immersive play.
+### NPC Brains (Inner-Self System)
+Characters are equipped with an internal state management system that tracks thoughts, motivations, and internal monologues. These factors dynamically influence AI-generated actions and dialogue, providing higher behavioral consistency than standard prompting.
 
-## 🚀 Quick Start
+### Story Cards (Lorebook)
+A keyword-triggered world information system. Lore cards are injected into the LLM context only when relevant keywords are detected in the recent story history, allowing for complex world-building without exceeding token limits.
+
+### Automated Context Management
+- **Smart Summarization**: Periodically condenses the story history into a concise summary to preserve long-term memory.
+- **Context Debugging**: A dedicated interface to inspect the raw prompt structure and token distribution being sent to the backend.
+
+### Multi-Mode Interaction
+Steer the narrative using three distinct interaction modes:
+- **Do**: Player actions.
+- **Say**: Character dialogue.
+- **Story**: Direct narrative intervention or world-state changes.
+
+### Technical UI
+A dark-themed interface built with Vanilla JS and CSS, utilizing a glassmorphic design system optimized for long-form reading and writing.
+
+## Installation
 
 ### Prerequisites
-- **Python 3.10+**
-- **A GGUF Model**: Recommended models like `Magnum-7b-v4` or `Llama-3-8B-Instruct`. Place them in the `models/` directory.
+- Python 3.10 or higher.
+- A GGUF-formatted model (e.g., Llama-3, Mistral, or Magnum). Place models in the `models/` directory.
 
-### Installation
+### Setup
 1. Clone the repository:
    ```bash
    git clone https://github.com/LilGremblin/LocalAIstoryteller.git
    cd LocalAIstoryteller
    ```
-2. Run the setup script to download the KoboldCPP backend:
+2. Download the KoboldCPP backend:
    ```bash
    setup_koboldcpp.bat
    ```
-3. Launch the engine:
+3. Initialize the environment and launch the server:
    ```bash
    run.bat
    ```
 
-## 🛠️ Technology Stack
-- **Backend**: FastAPI (Python)
-- **AI Backend**: KoboldCPP (llama.cpp)
-- **Frontend**: Vanilla JS + CSS3 (Glassmorphism design system)
-- **State**: JSON-based adventure storage
-
-## 📜 License
-This project is for personal use and creative exploration.
-
----
-*Built with ❤️ for storytellers.*
+## Architecture
+- **Server**: Python FastAPI / Uvicorn.
+- **LLM Backend**: KoboldCPP (via llama.cpp).
+- **Frontend**: Single-page application using modern CSS and standard DOM APIs.
+- **Storage**: Local JSON-based persistence for adventures and configurations.
